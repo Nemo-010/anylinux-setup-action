@@ -27,4 +27,4 @@ runs:
         # sourcing keeps presets like VERSION alive between the two scripts
         docker run --rm --platform "$PLATFORM" -e GITHUB_REPOSITORY -e DEVEL_RELEASE \
           -v "$GITHUB_WORKSPACE":/repo -v "$SETUP_DIR":/setup -w /repo "$CONTAINER" \
-          /bin/sh -euc 'sh /setup/setup.sh && . ./get-dependencies.sh && cd /repo && . ./make-appimage.sh'
+          /bin/sh -euc 'sh /setup/setup.sh; . ./get-dependencies.sh; cd /repo; . ./make-appimage.sh'
