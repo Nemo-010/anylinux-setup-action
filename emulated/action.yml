@@ -25,6 +25,13 @@ runs:
         # runner has already checked out one level above GITHUB_ACTION_PATH
         SETUP_DIR=$(dirname "$GITHUB_ACTION_PATH")
         # sourcing keeps presets like VERSION alive between the two scripts
+        # the scripts are sourced as separate commands: on an `&&` list, sh
+        # suspends errexit for every command but the last, and a sourced
+        # script inherits that, so a failure in get-dependencies.sh would be
+        # swallowed and the build would carry on without its dependencies
         docker run --rm --platform "$PLATFORM" -e GITHUB_REPOSITORY -e DEVEL_RELEASE \
           -v "$GITHUB_WORKSPACE":/repo -v "$SETUP_DIR":/setup -w /repo "$CONTAINER" \
-          /bin/sh -euc 'sh /setup/setup.sh && . ./get-dependencies.sh && cd /repo && . ./make-appimage.sh'
+          /bin/sh -euc 'sh /setup/setup.sh
+        . ./get-dependencies.sh
+        cd /repo
+        . ./make-appimage.sh'
